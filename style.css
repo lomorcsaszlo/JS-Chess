@@ -36,7 +36,7 @@ body {
 }
 
 .light-square {
-    background-color: var(--lightSquare) !important;
+    background-color: var(--lightSquare);
 }
 
 .dark-square {
@@ -64,6 +64,8 @@ body {
 .king-b    { background-image: url("./pieces-svg/king-b.svg"); }
 
 
-.highlighted{
-    background-color: var(--highlight) !important;
-}
+.highlighted {
+    outline: 3px solid var(--highlight);
+    outline-offset: -3px;
+  }
+  

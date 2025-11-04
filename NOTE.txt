@@ -1,0 +1,18 @@
+1. Játékos megnyom egy babut (--- SELECT PIECE ---)
+-itt megkapjuk a babu nevet, szinét és indexét
+2. index alapjan ellenőrizzük hova léphet. pl: pawn a 36 indexen: a 28.ra léphet, vagy ha vannak a 27, 26. akkor oda is. (--- MOVE PIECE ---), az összes lépés  felkerül egy listába
+3. Ha a lépnés benne van a listába, szabályos tehát mehet.
+
+
+
+
+
+KELL MAJD:
+-oldal ellenőrzés:
+    -ki lép?
+
+-sakk ellenőrzés:
+    - ha sakkban van, csak el léphet onnan vagy blokkolhat
+    - nem léphet ugy, hogy sakkba kerüljön (Pinelve van)
+
+STB...
