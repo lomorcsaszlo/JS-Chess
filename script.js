@@ -56,7 +56,7 @@ function getPieceClass(char) {
 
 GenerateBoard()
 generateBoardFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR")
-
+isOccupiedWhite()
 
 let selectedSquare = null;
 
@@ -82,8 +82,18 @@ for (let i = 0; i < squares.length; i++) {
             }
 
             legals = getLegels(pieceClass, i); // store it globally
+            console.log(legals[0])
+            for (let i = 0; i < squares.length; i++) {
+                if (legals.includes(i)) {
+                    squares[i].classList.add("legalMove")
+                }
+
+            }
+
+
             return;
         }
+
 
         // --- MOVE PIECE ---
         const targetIndex = Array.from(squares).indexOf(square);
@@ -102,7 +112,9 @@ for (let i = 0; i < squares.length; i++) {
             square.classList.remove(...oldPieceClasses);
             square.classList.add(...pieceClasses);
             selectedSquare.classList.remove(...pieceClasses);
+            document.querySelectorAll(".legalMove").forEach(sq => sq.classList.remove("legalMove"));
             selectedSquare = null;
+
             legals = [];
             return;
         }
@@ -110,6 +122,7 @@ for (let i = 0; i < squares.length; i++) {
         // --- DESELECT PIECE ---
         if (selectedSquare === square) {
             selectedSquare.classList.remove("highlighted");
+            document.querySelectorAll(".legalMove").forEach(sq => sq.classList.remove("legalMove"));
             selectedSquare = null;
             legals = [];
         }
@@ -119,12 +132,22 @@ for (let i = 0; i < squares.length; i++) {
 function getLegels(name, index) {
     const legalIndexes = [];
     if (name === "pawn-w") {
-        const forward = index - 8; // move up one square
-        if (forward >= 0) {
-            legalIndexes.push(forward);
+        legalIndexes.push(index - 8);
+
+        if (index >= 48 && index <= 55) {
+            legalIndexes.push(index - 16)
         }
     }
     return legalIndexes;
 }
 
-
+function isOccupiedWhite(){
+    for (let i = 0; i < squares.length; i++) {
+        if(squares[i].classList.contains("piece")){
+            console.log(i)
+        }
+    }
+}
+function isOccupiedBlack(){
+    
+}

@@ -4,6 +4,7 @@
     --darkSquare: lightblue;
     --backgroundColor: white;
     --highlight: orange;
+    --legalMove: orange;
 }
 
 
@@ -69,3 +70,9 @@ body {
     outline-offset: -3px;
   }
   
+
+.legalMove{
+    outline: 3px solid var(--legalMove);
+    outline-offset: -3px;
+    
+}
