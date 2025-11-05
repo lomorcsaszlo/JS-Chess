@@ -55,18 +55,19 @@ function getPieceClass(char) {
 
 
 GenerateBoard()
-generateBoardFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR")
-isOccupiedWhite()
+//Kezdőpozicio FEN
+generateBoardFEN("rnbqkbnr/ppp1pppp/8/3p4/2PP4/8/PP2PPPP/RNBQKBNR") //(QUEEN GAMBIT))
+
 
 let selectedSquare = null;
 
 let legals = [];
-
+0
 for (let i = 0; i < squares.length; i++) {
     squares[i].addEventListener("click", function () {
         const square = squares[i];
 
-        // --- SELECT PIECE ---
+        // --- BABU KIJELOLÉS ---
         if (!selectedSquare && square.classList.contains("piece")) {
             selectedSquare = square;
             square.classList.add("highlighted");
@@ -95,7 +96,7 @@ for (let i = 0; i < squares.length; i++) {
         }
 
 
-        // --- MOVE PIECE ---
+        // --- BABU LÉPÉS ---
         const targetIndex = Array.from(squares).indexOf(square);
         if (selectedSquare && selectedSquare !== square && legals.includes(targetIndex)) {
             const pieceClasses = Array.from(selectedSquare.classList).filter(
@@ -119,7 +120,7 @@ for (let i = 0; i < squares.length; i++) {
             return;
         }
 
-        // --- DESELECT PIECE ---
+        // --- BABU ELENGEDÉSE ---
         if (selectedSquare === square) {
             selectedSquare.classList.remove("highlighted");
             document.querySelectorAll(".legalMove").forEach(sq => sq.classList.remove("legalMove"));
@@ -131,23 +132,70 @@ for (let i = 0; i < squares.length; i++) {
 
 function getLegels(name, index) {
     const legalIndexes = [];
+    //FEHÉR GYALOG
     if (name === "pawn-w") {
-        legalIndexes.push(index - 8);
-
-        if (index >= 48 && index <= 55) {
+        if (!isOccupiedBlack(index - 8) && !isOccupiedWhite(index-8)) {
+            legalIndexes.push(index - 8);
+        }
+        if(isOccupiedBlack(index - 7)){
+             legalIndexes.push(index - 7);
+             
+        }
+        if(isOccupiedBlack(index - 9)){
+             legalIndexes.push(index - 9);
+        }
+        if (index >= 48 && index <= 55 && !isOccupiedWhite(index-8))  {
             legalIndexes.push(index - 16)
         }
     }
+
+    //FEKETE GYALOG
+    /* if (name === "pawn-b") {
+        if (!isOccupiedWhite(index + 8)) {
+            legalIndexes.push(index + 8);
+        }
+        if(isOccupiedWhite(index + 7)){
+             legalIndexes.push(index + 7);
+             
+        }
+        if(isOccupiedWhite(index + 9)){
+             legalIndexes.push(index + 9);
+        }
+        if (index >= 8 && index <= 15) {
+            legalIndexes.push(index + 16)
+        }
+    } */
     return legalIndexes;
 }
 
-function isOccupiedWhite(){
-    for (let i = 0; i < squares.length; i++) {
-        if(squares[i].classList.contains("piece")){
-            console.log(i)
-        }
-    }
+
+//ELLENŐRZI VAN-E FEHÉR BÁBU A MEGADOTT MEZŐN
+function isOccupiedWhite(index) {
+    const classes = Array.from(squares[index].classList);
+    const hasWhitePiece = classes.some(c => c.endsWith("-w"));
+    return hasWhitePiece
 }
-function isOccupiedBlack(){
-    
+
+
+//ELLENŐRZI VAN-E FEKETE BÁBU A MEGADOTT MEZŐN
+function isOccupiedBlack(index) {
+    const classes = Array.from(squares[index].classList);
+    const hasBlackPiece = classes.some(c => c.endsWith("-b"));
+    return hasBlackPiece
 }
+
+
+//ÁTVÁLTJA AZ INDEXET SAKK MEZŐRE
+function indexToNote(index) {
+    const notes = [
+        "A8", "B8", "C8", "D8", "E8", "F8", "G8", "H8",
+        "A7", "B7", "C7", "D7", "E7", "F7", "G7", "H7",
+        "A6", "B6", "C6", "D6", "E6", "F6", "G6", "H6",
+        "A5", "B5", "C5", "D5", "E5", "F5", "G5", "H5",
+        "A4", "B4", "C4", "D4", "E4", "F4", "G4", "H4",
+        "A3", "B3", "C3", "D3", "E3", "F3", "G3", "H3",
+        "A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2",
+        "A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1"
+    ];
+    return notes[index]
+}   
