@@ -1,3 +1,5 @@
+import { getBestMove } from './lichess.js'
+
 const squares = document.getElementsByClassName("square");
 const board = document.getElementById("chessboard");
 let isWhiteMoves = true;
@@ -39,6 +41,7 @@ function generateBoardFEN(FEN) {
     }
 }
 
+
 function getPieceClass(char) {
     const isWhite = char === char.toUpperCase();
     const piece = char.toLowerCase();
@@ -56,7 +59,7 @@ function getPieceClass(char) {
 
 GenerateBoard()
 //Kezdőpozicio FEN
-generateBoardFEN("rnbqkbnr/ppp1pppp/8/3p4/2PP4/8/PP2PPPP/RNBQKBNR") //(QUEEN GAMBIT))
+generateBoardFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR")
 
 
 let selectedSquare = null;
@@ -99,6 +102,7 @@ for (let i = 0; i < squares.length; i++) {
         // --- BABU LÉPÉS ---
         const targetIndex = Array.from(squares).indexOf(square);
         if (selectedSquare && selectedSquare !== square && legals.includes(targetIndex)) {
+            console.log(indexToNote(targetIndex))
             const pieceClasses = Array.from(selectedSquare.classList).filter(
                 c =>
                     !["square", "highlighted", "light-square", "dark-square"].includes(c)
@@ -113,6 +117,7 @@ for (let i = 0; i < squares.length; i++) {
             square.classList.remove(...oldPieceClasses);
             square.classList.add(...pieceClasses);
             selectedSquare.classList.remove(...pieceClasses);
+            getFen()
             document.querySelectorAll(".legalMove").forEach(sq => sq.classList.remove("legalMove"));
             selectedSquare = null;
 
@@ -134,20 +139,50 @@ function getLegels(name, index) {
     const legalIndexes = [];
     //FEHÉR GYALOG
     if (name === "pawn-w") {
-        if (!isOccupiedBlack(index - 8) && !isOccupiedWhite(index-8)) {
-            legalIndexes.push(index - 8);
-        }
-        if(isOccupiedBlack(index - 7)){
-             legalIndexes.push(index - 7);
-             
-        }
-        if(isOccupiedBlack(index - 9)){
-             legalIndexes.push(index - 9);
-        }
-        if (index >= 48 && index <= 55 && !isOccupiedWhite(index-8))  {
-            legalIndexes.push(index - 16)
+        const oneForward = index - 8;
+        const twoForward = index - 16;
+        const captures = [index - 7, index - 9];
+
+        // move forward one
+        if (!isOccupiedWhite(oneForward) && !isOccupiedBlack(oneForward))
+            legalIndexes.push(oneForward);
+
+        // move forward two (only from rank 2 → row 6, index 48–55)
+        if (index >= 48 && index <= 55 && !isOccupiedWhite(twoForward) && !isOccupiedBlack(twoForward))
+            legalIndexes.push(twoForward);
+
+        // capture moves
+        for (const cap of captures)
+            if (isOccupiedBlack(cap)) legalIndexes.push(cap);
+    }
+    if (name === "knight-w") {
+        const knightMoves = [
+            -17, -15, -10, -6, 6, 10, 15, 17
+        ];
+
+        const row = Math.floor(index / 8);
+        const col = index % 8;
+
+        for (const moveOffset of knightMoves) {
+            const move = index + moveOffset;
+            if (move < 0 || move >= 64) continue;
+
+            const moveRow = Math.floor(move / 8);
+            const moveCol = move % 8;
+
+            // valid knight moves must change both row and column by 1 or 2
+            const rowDiff = Math.abs(moveRow - row);
+            const colDiff = Math.abs(moveCol - col);
+            const isValidKnightMove = (rowDiff === 2 && colDiff === 1) || (rowDiff === 1 && colDiff === 2);
+
+            if (!isValidKnightMove) continue; // skip wrapping moves
+            if (!isOccupiedWhite(move)) {
+                legalIndexes.push(move);
+            }
         }
     }
+
+
 
     //FEKETE GYALOG
     /* if (name === "pawn-b") {
@@ -165,8 +200,15 @@ function getLegels(name, index) {
             legalIndexes.push(index + 16)
         }
     } */
+
+
+
+
+
     return legalIndexes;
 }
+
+getFen()
 
 
 //ELLENŐRZI VAN-E FEHÉR BÁBU A MEGADOTT MEZŐN
@@ -198,10 +240,70 @@ function indexToNote(index) {
         "A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1"
     ];
     return notes[index]
-}   
+}
 
 
 //PINELVE VAN-E?
-function isPinned(){
-    return 0;
+//(mezö pinelve van-e9)
+function getFen() {
+    let fen = "";
+    let emptyCount = 0;
+
+    for (let i = 0; i < 64; i++) {
+        const square = squares[i];
+        const pieceClass = Array.from(square.classList).find(c =>
+            /pawn-|rook-|knight-|bishop-|queen-|king-/.test(c)
+        );
+
+        if (pieceClass) {
+            // if we had empty squares before, add the number
+            if (emptyCount > 0) {
+                fen += emptyCount;
+                emptyCount = 0;
+            }
+
+            // get the piece letter
+            const [piece, color] = pieceClass.split("-");
+            const letterMap = {
+                pawn: "p",
+                rook: "r",
+                knight: "n",
+                bishop: "b",
+                queen: "q",
+                king: "k"
+            };
+            const letter = letterMap[piece];
+
+            // uppercase for white, lowercase for black
+            fen += color === "w" ? letter.toUpperCase() : letter.toLowerCase();
+        } else {
+            emptyCount++;
+        }
+
+        // every 8 squares → new rank
+        if ((i + 1) % 8 === 0) {
+            if (emptyCount > 0) {
+                fen += emptyCount;
+                emptyCount = 0;
+            }
+            if (i !== 63) fen += "/";
+        }
+    }
+
+    // append default FEN fields (side to move, castling, etc.)
+    fen += isWhiteMoves ? " w KQkq - 0 1" : " b KQkq - 0 1";
+
+    console.log(fen);
+    return fen;
 }
+
+
+
+
+
+
+//LICHESS BOT
+
+getBestMove("r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3")
+
+
