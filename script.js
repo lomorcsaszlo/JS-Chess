@@ -199,3 +199,9 @@ function indexToNote(index) {
     ];
     return notes[index]
 }   
+
+
+//PINELVE VAN-E?
+function isPinned(){
+    return 0;
+}

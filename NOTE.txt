@@ -7,14 +7,8 @@
 
 
 
-KELL MAJD:
--oldal ellenőrzés:
-    -ki lép?
-
--sakk ellenőrzés:
-    - ha sakkban van, csak el léphet onnan vagy blokkolhat
-    - nem léphet ugy, hogy sakkba kerüljön (Pinelve van)
-
-STB...
-
-l
+PINELVE ellenzés:
+Ha pinelve van, nem léphet.
+1. Van-e egyenesen (-8,+8 többszörösei, 1-8ig vizszitesen indexu), vagy átloban (-9 +9, -7 +7 többszerei indexu) a babu mögött király? 
+2. Ha igen: van-e abban a sorban atloban babu (atloban futo/kiralyno. egyenesen bastya vagy kiralyno)
+3. truet vagy falset ad vissza
