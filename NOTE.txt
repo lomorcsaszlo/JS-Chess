@@ -1,14 +1,1 @@
-1. Játékos megnyom egy babut (---  BABU KIJELOLÉS ---)
--itt megkapjuk a babu nevet, szinét és indexét
-2. index alapjan ellenőrizzük hova léphet. pl: pawn a 36 indexen: a 28.ra léphet, vagy ha vannak a 27, 26. akkor oda is. (--- BABU LÉPÉS  ---), az összes lépés  felkerül egy listába
-3. Ha a lépnés benne van a listába, szabályos tehát mehet.
-
-
-
-
-
-PINELVE ellenzés:
-Ha pinelve van, nem léphet.
-1. Van-e egyenesen (-8,+8 többszörösei, 1-8ig vizszitesen indexu), vagy átloban (-9 +9, -7 +7 többszerei indexu) a babu mögött király? 
-2. Ha igen: van-e abban a sorban atloban babu (atloban futo/kiralyno. egyenesen bastya vagy kiralyno)
-3. truet vagy falset ad vissza
+Sakkban van-e ellenőrzés kell, ha nem, a lichess hibat dob!!!!!
