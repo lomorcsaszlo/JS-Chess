@@ -363,5 +363,5 @@ function MovePiece(chess_note) {
 /* const moveNote = await getBestMove(getFen());
 MovePiece(moveNote) */
 function isCheck(index) {
-    
+    return 0;
 }
