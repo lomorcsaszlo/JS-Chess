@@ -65,7 +65,7 @@ function getPieceClass(char) {
 
 GenerateBoard()
 //Kezdőpozicio FEN
-generateBoardFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR")
+generateBoardFEN("4k3/4q3/8/8/8/8/4N3/4K3")
 
 
 let selectedSquare = null;
@@ -362,6 +362,20 @@ function MovePiece(chess_note) {
 }
 /* const moveNote = await getBestMove(getFen());
 MovePiece(moveNote) */
-function isCheck(index) {
-    return 0;
-}
+/* function isCheck(index) {
+    const diagonal1 = [-7, -14,-21, -28, 7, 14, 21, 28] 
+    const horizontal =[8, 16, 24, 32, 40, 48, 56, 62]
+    for (let i = 0; i < horizontal.length; i++) {
+        console.log(horizontal[i])
+        while (!index - horizontal[i] < 0 && index + horizontal[i] < 64) {
+            if(isOccupiedBlack(index - horizontal[i])){
+                return true
+                break
+            }
+        }
+        
+        
+    }
+} */
+
+// console.log(isCheck(60))
