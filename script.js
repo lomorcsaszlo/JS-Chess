@@ -2,7 +2,13 @@ import { getBestMove } from './lichess.js'
 
 const squares = document.getElementsByClassName("square");
 const board = document.getElementById("chessboard");
-let isWhiteMoves = true;
+let isWhiteMoves = false;
+let halfmoveClock = 0;
+let fullmoveNumber = 1;
+
+
+
+
 
 function GenerateBoard() {
     for (let i = 0; i < 64; i++) {
@@ -109,7 +115,12 @@ for (let i = 0; i < squares.length; i++) {
             );
 
             selectedSquare.classList.remove("highlighted");
-
+            
+            if(!pieceClasses.some(c => c.startsWith("pawn"))){
+                halfmoveClock += 1;
+            }else if(pieceClasses.some(c => c.startsWith("pawn"))){
+                halfmoveClock = 0;
+            }
             const oldPieceClasses = Array.from(square.classList).filter(
                 c =>
                     !["square", "light-square", "dark-square", "highlighted"].includes(c)
@@ -117,7 +128,16 @@ for (let i = 0; i < squares.length; i++) {
             square.classList.remove(...oldPieceClasses);
             square.classList.add(...pieceClasses);
             selectedSquare.classList.remove(...pieceClasses);
-            getFen()
+            
+            const fen = getFen();
+
+
+            getBestMove(fen).then(moveNote => {
+                console.log("Best move:", moveNote);
+                MovePiece(moveNote);
+                fullmoveNumber += 1;
+            }).catch(err => console.error("Error getting move:", err));
+            
             document.querySelectorAll(".legalMove").forEach(sq => sq.classList.remove("legalMove"));
             selectedSquare = null;
 
@@ -208,7 +228,7 @@ function getLegels(name, index) {
     return legalIndexes;
 }
 
-getFen()
+
 
 
 //ELLENŐRZI VAN-E FEHÉR BÁBU A MEGADOTT MEZŐN
@@ -245,6 +265,9 @@ function indexToNote(index) {
 
 //PINELVE VAN-E?
 //(mezö pinelve van-e9)
+// Declare outside, like your isWhiteMoves
+
+
 function getFen() {
     let fen = "";
     let emptyCount = 0;
@@ -256,13 +279,11 @@ function getFen() {
         );
 
         if (pieceClass) {
-            // if we had empty squares before, add the number
             if (emptyCount > 0) {
                 fen += emptyCount;
                 emptyCount = 0;
             }
 
-            // get the piece letter
             const [piece, color] = pieceClass.split("-");
             const letterMap = {
                 pawn: "p",
@@ -274,13 +295,11 @@ function getFen() {
             };
             const letter = letterMap[piece];
 
-            // uppercase for white, lowercase for black
             fen += color === "w" ? letter.toUpperCase() : letter.toLowerCase();
         } else {
             emptyCount++;
         }
 
-        // every 8 squares → new rank
         if ((i + 1) % 8 === 0) {
             if (emptyCount > 0) {
                 fen += emptyCount;
@@ -290,8 +309,9 @@ function getFen() {
         }
     }
 
-    // append default FEN fields (side to move, castling, etc.)
-    fen += isWhiteMoves ? " w KQkq - 0 1" : " b KQkq - 0 1";
+    // Use the external variables here
+    fen += isWhiteMoves ? ` w KQkq - ${halfmoveClock} ${fullmoveNumber}`
+        : ` b KQkq - ${halfmoveClock} ${fullmoveNumber}`;
 
     console.log(fen);
     return fen;
@@ -299,11 +319,46 @@ function getFen() {
 
 
 
-
-
-
 //LICHESS BOT
 
-getBestMove("r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3")
 
 
+
+function MovePiece(chess_note) {
+    const previous = chess_note.slice(0, 2);
+    const move = chess_note.slice(2, 4);
+    let MovedPiece = null;
+    let removePiece = null;
+
+
+    for (let i = 0; i < squares.length; i++) {
+        if (move == indexToNote(i).toLowerCase()) {
+            MovedPiece = squares[i];
+        }
+
+        if (previous == indexToNote(i).toLowerCase()) {
+            removePiece = squares[i]
+        }
+    }
+    if(removePiece.classList.contains("pawn-w") || removePiece.classList.contains("pawn-b")){
+        halfmoveClock = 0;
+    }else{
+        halfmoveClock += 1;
+    }
+    if (MovedPiece.classList.contains("piece")) {
+        MovedPiece.classList.remove("piece")
+        MovedPiece.classList.remove(MovedPiece.classList[2])
+
+    }
+    console.log(removePiece.classList[3])
+
+    MovedPiece.classList.add("piece")
+    MovedPiece.classList.add(removePiece.classList[3])
+
+    removePiece.classList.remove("piece")
+    removePiece.classList.remove(removePiece.classList[2])
+
+
+}
+/* const moveNote = await getBestMove(getFen());
+MovePiece(moveNote) */
