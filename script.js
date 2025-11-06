@@ -332,7 +332,7 @@ function MovePiece(chess_note) {
 
 
     for (let i = 0; i < squares.length; i++) {
-        if (move == indexToNote(i).toLowerCase()) {
+        if (move == indexToNote(i).toLowerCase() ) {
             MovedPiece = squares[i];
         }
 
@@ -362,3 +362,6 @@ function MovePiece(chess_note) {
 }
 /* const moveNote = await getBestMove(getFen());
 MovePiece(moveNote) */
+function isCheck(index) {
+    
+}
