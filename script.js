@@ -65,7 +65,7 @@ function getPieceClass(char) {
 
 GenerateBoard()
 //Kezdőpozicio FEN
-generateBoardFEN("4k3/4q3/8/8/8/8/4N3/4K3")
+generateBoardFEN("r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R")
 
 
 let selectedSquare = null;
