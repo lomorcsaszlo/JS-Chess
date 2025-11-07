@@ -477,22 +477,46 @@ function sameLine(from, to, dir) {
     return Math.abs(fromRow - toRow) === Math.abs(fromCol - toCol); // diagonal
 }
 
+
+
+
+function isKingCheck(){
+    for (let i = 0; i < squares.length; i++) {
+        if(squares[i].classList.contains("king-w")){
+            isCheck(i)
+        }
+        
+    }
+}
+isKingCheck()
+
+
+
+
+
+
 console.log(isCheck(60, "w"))
 
 document.addEventListener('keydown', function(event) {
     if (event.key.toLowerCase() === 'f') {
-        // Select all elements you want to flash (for example, squares)
+        // Load the audio
+        const audio = new Audio('sabrina.mp3'); // <-- make sure the path is correct
+        audio.currentTime = 0;
+        audio.play();
+
+        // Stop after 6 seconds
+        setTimeout(() => {
+            audio.pause();
+            audio.currentTime = 0; // reset to beginning
+        }, 6400);
+
+        // Flash animation
         const squares = document.querySelectorAll('.light-square');
-
         squares.forEach(square => {
-            // Remove the class if it already has it (so you can retrigger animation)
             square.classList.remove('flash-square');
-
-            // Force reflow to restart animation
-            void square.offsetWidth;
-
-            // Add the animation class
+            void square.offsetWidth; // restart animation
             square.classList.add('flash-square');
         });
     }
 });
+
