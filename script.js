@@ -159,29 +159,35 @@ for (let i = 0; i < squares.length; i++) {
 
 function getLegels(name, index) {
     const legalIndexes = [];
-    //FEHÉR GYALOG
+
+    //Helper functions
+    const sameRow = (a, b) => Math.floor(a / 8) === Math.floor(b / 8);
+
+    // ♙ WHITE PAWN
     if (name === "pawn-w") {
         const oneForward = index - 8;
         const twoForward = index - 16;
         const captures = [index - 7, index - 9];
 
-        // move forward one
-        if (!isOccupiedWhite(oneForward) && !isOccupiedBlack(oneForward))
+        // Move forward one
+        if (oneForward >= 0 && !isOccupiedWhite(oneForward) && !isOccupiedBlack(oneForward))
             legalIndexes.push(oneForward);
 
-        // move forward two (only from rank 2 → row 6, index 48–55)
+        // Move forward two (rank 2)
         if (index >= 48 && index <= 55 && !isOccupiedWhite(twoForward) && !isOccupiedBlack(twoForward))
             legalIndexes.push(twoForward);
 
-        // capture moves
-        for (const cap of captures)
-            if (isOccupiedBlack(cap)) legalIndexes.push(cap);
+        // Captures
+        for (const cap of captures) {
+            if (cap >= 0 && cap < 64 && isOccupiedBlack(cap) && !sameRow(index, cap)) {
+                legalIndexes.push(cap);
+            }
+        }
     }
-    if (name === "knight-w") {
-        const knightMoves = [
-            -17, -15, -10, -6, 6, 10, 15, 17
-        ];
 
+    // ♘ WHITE KNIGHT
+    if (name === "knight-w") {
+        const knightMoves = [-17, -15, -10, -6, 6, 10, 15, 17];
         const row = Math.floor(index / 8);
         const col = index % 8;
 
@@ -191,41 +197,65 @@ function getLegels(name, index) {
 
             const moveRow = Math.floor(move / 8);
             const moveCol = move % 8;
-
-            // valid knight moves must change both row and column by 1 or 2
             const rowDiff = Math.abs(moveRow - row);
             const colDiff = Math.abs(moveCol - col);
-            const isValidKnightMove = (rowDiff === 2 && colDiff === 1) || (rowDiff === 1 && colDiff === 2);
 
-            if (!isValidKnightMove) continue; // skip wrapping moves
-            if (!isOccupiedWhite(move)) {
-                legalIndexes.push(move);
+            if (!((rowDiff === 2 && colDiff === 1) || (rowDiff === 1 && colDiff === 2))) continue;
+            if (!isOccupiedWhite(move)) legalIndexes.push(move);
+        }
+    }
+
+    // ♗ WHITE BISHOP
+    if (name === "bishop-w" || name === "queen-w") {
+        const directions = [-9, -7, 7, 9];
+        for (const dir of directions) {
+            let pos = index + dir;
+            while (pos >= 0 && pos < 64 && Math.abs((pos % 8) - ((pos - dir) % 8)) === 1) {
+                if (isOccupiedWhite(pos)) break;
+                legalIndexes.push(pos);
+                if (isOccupiedBlack(pos)) break;
+                pos += dir;
             }
         }
     }
 
-
-
-    //FEKETE GYALOG
-    /* if (name === "pawn-b") {
-        if (!isOccupiedWhite(index + 8)) {
-            legalIndexes.push(index + 8);
+    // ♖ WHITE ROOK
+    if (name === "rook-w" || name === "queen-w") {
+        const directions = [-8, 8, -1, 1];
+        for (const dir of directions) {
+            let pos = index + dir;
+            while (pos >= 0 && pos < 64) {
+                // Prevent wrapping horizontally
+                if ((dir === 1 || dir === -1) && !sameRow(pos, pos - dir)) break;
+                if (isOccupiedWhite(pos)) break;
+                legalIndexes.push(pos);
+                if (isOccupiedBlack(pos)) break;
+                pos += dir;
+            }
         }
-        if(isOccupiedWhite(index + 7)){
-             legalIndexes.push(index + 7);
-             
+    }
+
+    // ♔ WHITE KING
+    if (name === "king-w") {
+        const moves = [-9, -8, -7, -1, 1, 7, 8, 9];
+        const row = Math.floor(index / 8);
+        const col = index % 8;
+
+        for (const moveOffset of moves) {
+            const move = index + moveOffset;
+            if (move < 0 || move >= 64) continue;
+
+            const moveRow = Math.floor(move / 8);
+            const moveCol = move % 8;
+            if (Math.abs(moveRow - row) > 1 || Math.abs(moveCol - col) > 1) continue;
+
+            if (!isOccupiedWhite(move)) legalIndexes.push(move);
         }
-        if(isOccupiedWhite(index + 9)){
-             legalIndexes.push(index + 9);
-        }
-        if (index >= 8 && index <= 15) {
-            legalIndexes.push(index + 16)
-        }
-    } */
 
-
-
-
+        // Castling (optional example — needs more logic)
+        // if (!isInCheck && canCastleKingSide) legalIndexes.push(index - 2);
+        // if (!isInCheck && canCastleQueenSide) legalIndexes.push(index + 2);
+    }
 
     return legalIndexes;
 }
@@ -311,13 +341,36 @@ function getFen() {
         }
     }
 
-    // Use the external variables here
-    fen += isWhiteMoves ? ` w KQkq - ${halfmoveClock} ${fullmoveNumber}`
-        : ` b KQkq - ${halfmoveClock} ${fullmoveNumber}`;
+    // === Determine castling rights ===
+    let castling = "";
 
-    console.log(fen);
+    // White pieces
+    const whiteKing = squares[60]?.classList.contains("king-w"); // e1
+    const whiteRookA1 = squares[56]?.classList.contains("rook-w"); // a1
+    const whiteRookH1 = squares[63]?.classList.contains("rook-w"); // h1
+
+    if (whiteKing && whiteRookH1) castling += "K";
+    if (whiteKing && whiteRookA1) castling += "Q";
+
+    // Black pieces
+    const blackKing = squares[4]?.classList.contains("king-b"); // e8
+    const blackRookA8 = squares[0]?.classList.contains("rook-b"); // a8
+    const blackRookH8 = squares[7]?.classList.contains("rook-b"); // h8
+
+    if (blackKing && blackRookH8) castling += "k";
+    if (blackKing && blackRookA8) castling += "q";
+
+    if (castling === "") castling = "-";
+
+    // === Assemble final FEN ===
+    fen += isWhiteMoves
+        ? ` w ${castling} - ${halfmoveClock} ${fullmoveNumber}`
+        : ` b ${castling} - ${halfmoveClock} ${fullmoveNumber}`;
+
+    console.log("FEN:", fen);
     return fen;
 }
+
 
 
 
