@@ -64,7 +64,7 @@ body {
 .bishop-b  { background-image: url("./pieces-svg/bb.svg"); }
 .queen-b   { background-image: url("./pieces-svg/bq.svg"); }
 .king-b    { background-image: url("./pieces-svg/bk.svg"); }
-
+    
 
 .highlighted {
     outline: 3px solid var(--highlight);
