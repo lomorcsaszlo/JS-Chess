@@ -67,13 +67,11 @@ body {
 
 
 .highlighted {
-    outline: 3px solid var(--highlight);
-    outline-offset: -3px;
+    opacity: 0.75;
   }
   
 
 .legalMove{
-    outline: 3px solid var(--legalMove);
-    outline-offset: -3px;
+    opacity: 0.75;
     
 }
