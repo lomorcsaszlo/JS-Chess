@@ -51,19 +51,19 @@ body {
     background-position: center;
 }
   
-.pawn-w    { background-image: url("./pieces-svg/pawn-w.svg"); }
-.rook-w    { background-image: url("./pieces-svg/rook-w.svg"); }
-.knight-w  { background-image: url("./pieces-svg/knight-w.svg"); }
-.bishop-w  { background-image: url("./pieces-svg/bishop-w.svg"); }
-.queen-w   { background-image: url("./pieces-svg/queen-w.svg"); }
-.king-w    { background-image: url("./pieces-svg/king-w.svg"); }
+.pawn-w    { background-image: url("./pieces-svg/wp.svg"); }
+.rook-w    { background-image: url("./pieces-svg/wr.svg"); }
+.knight-w  { background-image: url("./pieces-svg/wn.svg"); }
+.bishop-w  { background-image: url("./pieces-svg/wb.svg"); }
+.queen-w   { background-image: url("./pieces-svg/wq.svg"); }
+.king-w    { background-image: url("./pieces-svg/wk.svg"); }
 
-.pawn-b    { background-image: url("./pieces-svg/pawn-b.svg"); }
-.rook-b    { background-image: url("./pieces-svg/rook-b.svg"); }
-.knight-b  { background-image: url("./pieces-svg/knight-b.svg"); }
-.bishop-b  { background-image: url("./pieces-svg/bishop-b.svg"); }
-.queen-b   { background-image: url("./pieces-svg/queen-b.svg"); }
-.king-b    { background-image: url("./pieces-svg/king-b.svg"); }
+.pawn-b    { background-image: url("./pieces-svg/bp.svg"); }
+.rook-b    { background-image: url("./pieces-svg/br.svg"); }
+.knight-b  { background-image: url("./pieces-svg/bn.svg"); }
+.bishop-b  { background-image: url("./pieces-svg/bb.svg"); }
+.queen-b   { background-image: url("./pieces-svg/bq.svg"); }
+.king-b    { background-image: url("./pieces-svg/bk.svg"); }
 
 
 .highlighted {
