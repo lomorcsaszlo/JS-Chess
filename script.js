@@ -21,11 +21,12 @@ function GenerateBoard() {
         const col = i % 8;
 
         if ((row + col) % 2 === 0) {
-            squares[i].classList.add("light-square")
+            squares[i].classList.add("dark-square")
 
         } else {
             
-            squares[i].classList.add("dark-square")
+            
+            squares[i].classList.add("light-square")
 
         }
     }
