@@ -6,7 +6,7 @@ let isWhiteMoves = false;
 let halfmoveClock = 0;
 let fullmoveNumber = 1;
 
-
+//teszt
 
 
 
