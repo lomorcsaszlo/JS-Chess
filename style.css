@@ -41,6 +41,20 @@ body {
     padding: 0;
 }
 
+@keyframes colorFlash {
+    0% { background-color: red; }
+    25% { background-color: yellow; }
+    50% { background-color: blue; }
+    75% { background-color: green; }
+    100% { background-color: red; }
+}
+
+.flash-square {
+    animation: colorFlash 0.6s linear 4; /* Change 0.3s for faster/slower flashing */
+}
+
+
+
 .GMtag{
     background-color: rgb(141, 14, 14);
     margin-right: 11px;
@@ -102,3 +116,4 @@ body {
     opacity: 0.75;
     
 }
+

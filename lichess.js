@@ -1,4 +1,6 @@
 // 1. Helper function to call chess-api.com
+
+
 async function postChessApi(data = {}) {
     const response = await fetch("https://chess-api.com/v1", {
         method: "POST",

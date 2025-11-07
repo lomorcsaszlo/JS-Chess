@@ -478,3 +478,21 @@ function sameLine(from, to, dir) {
 }
 
 console.log(isCheck(60, "w"))
+
+document.addEventListener('keydown', function(event) {
+    if (event.key.toLowerCase() === 'f') {
+        // Select all elements you want to flash (for example, squares)
+        const squares = document.querySelectorAll('.light-square');
+
+        squares.forEach(square => {
+            // Remove the class if it already has it (so you can retrigger animation)
+            square.classList.remove('flash-square');
+
+            // Force reflow to restart animation
+            void square.offsetWidth;
+
+            // Add the animation class
+            square.classList.add('flash-square');
+        });
+    }
+});
