@@ -21,10 +21,11 @@ function GenerateBoard() {
         const col = i % 8;
 
         if ((row + col) % 2 === 0) {
-            squares[i].classList.add("dark-square")
+            squares[i].classList.add("light-square")
 
         } else {
-            squares[i].classList.add("light-square")
+            
+            squares[i].classList.add("dark-square")
 
         }
     }
@@ -360,22 +361,65 @@ function MovePiece(chess_note) {
 
 
 }
-/* const moveNote = await getBestMove(getFen());
-MovePiece(moveNote) */
-/* function isCheck(index) {
-    const diagonal1 = [-7, -14,-21, -28, 7, 14, 21, 28] 
-    const horizontal =[8, 16, 24, 32, 40, 48, 56, 62]
-    for (let i = 0; i < horizontal.length; i++) {
-        console.log(horizontal[i])
-        while (!index - horizontal[i] < 0 && index + horizontal[i] < 64) {
-            if(isOccupiedBlack(index - horizontal[i])){
-                return true
-                break
-            }
-        }
-        
-        
-    }
-} */
+function isCheck(index, color) {
+    const enemyColor = color === "w" ? "b" : "w";
+    const ownColor = color === "w" ? "w" : "b";
 
-// console.log(isCheck(60))
+    const directions = {
+        diagonal: [-9, -7, 7, 9],
+        straight: [-8, 8, -1, 1],
+    };
+
+    // --- Diagonals: bishops + queens ---
+    for (const dir of directions.diagonal) {
+        let i = index + dir;
+        while (i >= 0 && i < 64 && sameLine(index, i, dir)) {
+            const sq = squares[i];
+            if (!sq) break;
+
+            if (sq.classList.contains("piece")) {
+                if (sq.classList.contains(`-${ownColor}`)) break;
+                if (
+                    sq.classList.contains(`bishop-${enemyColor}`) ||
+                    sq.classList.contains(`queen-${enemyColor}`)
+                ) return true;
+                break;
+            }
+            i += dir;
+        }
+    }
+
+    // --- Horizontals/verticals: rooks + queens ---
+    for (const dir of directions.straight) {
+        let i = index + dir;
+        while (i >= 0 && i < 64 && sameLine(index, i, dir)) {
+            const sq = squares[i];
+            if (!sq) break;
+
+            if (sq.classList.contains("piece")) {
+                if (sq.classList.contains(`-${ownColor}`)) break;
+                if (
+                    sq.classList.contains(`rook-${enemyColor}`) ||
+                    sq.classList.contains(`queen-${enemyColor}`)
+                ) return true;
+                break;
+            }
+            i += dir;
+        }
+    }
+
+    return false;
+}
+
+function sameLine(from, to, dir) {
+    const fromRow = Math.floor(from / 8);
+    const toRow = Math.floor(to / 8);
+    const fromCol = from % 8;
+    const toCol = to % 8;
+
+    if (dir === -8 || dir === 8) return fromCol === toCol; // vertical
+    if (dir === -1 || dir === 1) return fromRow === toRow; // horizontal
+    return Math.abs(fromRow - toRow) === Math.abs(fromCol - toCol); // diagonal
+}
+
+console.log(isCheck(60, "w"))
