@@ -19,7 +19,7 @@
     height: 600px;
     border: 4px solid #333;
     border-radius: 2px;
-    margin: 3rem;
+    margin-top: 150px;
 }
 
 body {
@@ -33,11 +33,14 @@ body {
     
 }
 .hz{
+    position: absolute;
+    top: 30px;     /* távolság a lap tetejétől */
+    left: 670px;    /* távolság a bal oldaltól */
     display: flex;
-    flex-direction: row;
-    justify-content: center;
     align-items: center;
-    padding: 0;
+    border-radius: 8px;
+    padding: 8px 12px;
+    z-index: 10;   /* hogy a tábla fölött maradjon */
 }
 
 @keyframes colorFlash {
