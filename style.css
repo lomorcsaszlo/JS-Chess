@@ -154,3 +154,42 @@ body {
     
 }
 
+.winBox {
+    position: fixed; /* stays centered even if you scroll */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* centers it perfectly */
+    text-align: center;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    background-color: var(--backgroundColor);
+    padding: 30px;
+    color: var(--darkSquare);
+    border-radius: 10px;
+    z-index: 1000; /* make sure it appears above everything */
+}
+.buttons {
+    display: inline-block;
+    background-color: var(--lightSquare);
+    color: white;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    user-select: none;
+    margin: 10px;
+  }
+
+  .buttons:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  }
+
+  .buttons:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+  }

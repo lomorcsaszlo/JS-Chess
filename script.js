@@ -520,3 +520,4 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
+const winbox = document.getElementsByClassName("winBox")[0].style.display = "none";
