@@ -24,8 +24,8 @@ function GenerateBoard() {
             squares[i].classList.add("dark-square")
 
         } else {
-            
-            
+
+
             squares[i].classList.add("light-square")
 
         }
@@ -111,6 +111,8 @@ for (let i = 0; i < squares.length; i++) {
         // --- BABU LÉPÉS ---
         const targetIndex = Array.from(squares).indexOf(square);
         if (selectedSquare && selectedSquare !== square && legals.includes(targetIndex)) {
+
+
             console.log(indexToNote(targetIndex))
             const pieceClasses = Array.from(selectedSquare.classList).filter(
                 c =>
@@ -118,10 +120,10 @@ for (let i = 0; i < squares.length; i++) {
             );
 
             selectedSquare.classList.remove("highlighted");
-            
-            if(!pieceClasses.some(c => c.startsWith("pawn"))){
+
+            if (!pieceClasses.some(c => c.startsWith("pawn"))) {
                 halfmoveClock += 1;
-            }else if(pieceClasses.some(c => c.startsWith("pawn"))){
+            } else if (pieceClasses.some(c => c.startsWith("pawn"))) {
                 halfmoveClock = 0;
             }
             const oldPieceClasses = Array.from(square.classList).filter(
@@ -131,7 +133,7 @@ for (let i = 0; i < squares.length; i++) {
             square.classList.remove(...oldPieceClasses);
             square.classList.add(...pieceClasses);
             selectedSquare.classList.remove(...pieceClasses);
-            
+
             const fen = getFen();
 
 
@@ -140,7 +142,7 @@ for (let i = 0; i < squares.length; i++) {
                 MovePiece(moveNote);
                 fullmoveNumber += 1;
             }).catch(err => console.error("Error getting move:", err));
-            
+
             document.querySelectorAll(".legalMove").forEach(sq => sq.classList.remove("legalMove"));
             selectedSquare = null;
 
@@ -161,7 +163,7 @@ for (let i = 0; i < squares.length; i++) {
 function getLegels(name, index) {
     const legalIndexes = [];
 
-    //Helper functions
+    // Helper functions
     const sameRow = (a, b) => Math.floor(a / 8) === Math.floor(b / 8);
 
     // ♙ WHITE PAWN
@@ -171,16 +173,16 @@ function getLegels(name, index) {
         const captures = [index - 7, index - 9];
 
         // Move forward one
-        if (oneForward >= 0 && !isOccupiedWhite(oneForward) && !isOccupiedBlack(oneForward))
+        if (!isKingCheck() && oneForward >= 0 && !isOccupiedWhite(oneForward) && !isOccupiedBlack(oneForward))
             legalIndexes.push(oneForward);
 
         // Move forward two (rank 2)
-        if (index >= 48 && index <= 55 && !isOccupiedWhite(twoForward) && !isOccupiedBlack(twoForward))
+        if (!isKingCheck() && index >= 48 && index <= 55 && !isOccupiedWhite(twoForward) && !isOccupiedBlack(twoForward))
             legalIndexes.push(twoForward);
 
         // Captures
         for (const cap of captures) {
-            if (cap >= 0 && cap < 64 && isOccupiedBlack(cap) && !sameRow(index, cap)) {
+            if (!isKingCheck() && cap >= 0 && cap < 64 && isOccupiedBlack(cap) && !sameRow(index, cap)) {
                 legalIndexes.push(cap);
             }
         }
@@ -194,15 +196,15 @@ function getLegels(name, index) {
 
         for (const moveOffset of knightMoves) {
             const move = index + moveOffset;
-            if (move < 0 || move >= 64) continue;
+            if (!isKingCheck() && (move < 0 || move >= 64)) continue;
 
             const moveRow = Math.floor(move / 8);
             const moveCol = move % 8;
             const rowDiff = Math.abs(moveRow - row);
             const colDiff = Math.abs(moveCol - col);
 
-            if (!((rowDiff === 2 && colDiff === 1) || (rowDiff === 1 && colDiff === 2))) continue;
-            if (!isOccupiedWhite(move)) legalIndexes.push(move);
+            if (!isKingCheck() && !((rowDiff === 2 && colDiff === 1) || (rowDiff === 1 && colDiff === 2))) continue;
+            if (!isKingCheck() && !isOccupiedWhite(move)) legalIndexes.push(move);
         }
     }
 
@@ -211,7 +213,12 @@ function getLegels(name, index) {
         const directions = [-9, -7, 7, 9];
         for (const dir of directions) {
             let pos = index + dir;
-            while (pos >= 0 && pos < 64 && Math.abs((pos % 8) - ((pos - dir) % 8)) === 1) {
+            while (
+                !isKingCheck() &&
+                pos >= 0 &&
+                pos < 64 &&
+                Math.abs((pos % 8) - ((pos - dir) % 8)) === 1
+            ) {
                 if (isOccupiedWhite(pos)) break;
                 legalIndexes.push(pos);
                 if (isOccupiedBlack(pos)) break;
@@ -225,7 +232,7 @@ function getLegels(name, index) {
         const directions = [-8, 8, -1, 1];
         for (const dir of directions) {
             let pos = index + dir;
-            while (pos >= 0 && pos < 64) {
+            while (!isKingCheck() && pos >= 0 && pos < 64) {
                 // Prevent wrapping horizontally
                 if ((dir === 1 || dir === -1) && !sameRow(pos, pos - dir)) break;
                 if (isOccupiedWhite(pos)) break;
@@ -244,22 +251,24 @@ function getLegels(name, index) {
 
         for (const moveOffset of moves) {
             const move = index + moveOffset;
-            if (move < 0 || move >= 64) continue;
+            if (!isKingCheck() && (move < 0 || move >= 64)) continue;
 
             const moveRow = Math.floor(move / 8);
             const moveCol = move % 8;
-            if (Math.abs(moveRow - row) > 1 || Math.abs(moveCol - col) > 1) continue;
+            if (!isKingCheck() && (Math.abs(moveRow - row) > 1 || Math.abs(moveCol - col) > 1)) continue;
 
-            if (!isOccupiedWhite(move)) legalIndexes.push(move);
+            if (!isKingCheck() && !isOccupiedWhite(move)) legalIndexes.push(move);
         }
 
         // Castling (optional example — needs more logic)
-        // if (!isInCheck && canCastleKingSide) legalIndexes.push(index - 2);
-        // if (!isInCheck && canCastleQueenSide) legalIndexes.push(index + 2);
+        
     }
+    
 
     return legalIndexes;
 }
+
+
 
 
 
@@ -388,7 +397,7 @@ function MovePiece(chess_note) {
 
 
     for (let i = 0; i < squares.length; i++) {
-        if (move == indexToNote(i).toLowerCase() ) {
+        if (move == indexToNote(i).toLowerCase()) {
             MovedPiece = squares[i];
         }
 
@@ -396,9 +405,9 @@ function MovePiece(chess_note) {
             removePiece = squares[i]
         }
     }
-    if(removePiece.classList.contains("pawn-w") || removePiece.classList.contains("pawn-b")){
+    if (removePiece.classList.contains("pawn-w") || removePiece.classList.contains("pawn-b")) {
         halfmoveClock = 0;
-    }else{
+    } else {
         halfmoveClock += 1;
     }
     if (MovedPiece.classList.contains("piece")) {
@@ -480,15 +489,89 @@ function sameLine(from, to, dir) {
 
 
 
-function isKingCheck(){
+function isKingCheck() {
+    let kingIndex = null;
+
+    // Find white king
     for (let i = 0; i < squares.length; i++) {
-        if(squares[i].classList.contains("king-w")){
-            isCheck(i)
+        if (squares[i].classList.contains("king-w")) {
+            kingIndex = i;
+            break;
         }
-        
     }
+    if (kingIndex === null) return false;
+
+    const enemyColor = "b";
+    const row = Math.floor(kingIndex / 8);
+    const col = kingIndex % 8;
+
+    // --- Check for pawn attacks (black pawns attack downwards) ---
+    const pawnAttacks = [kingIndex + 7, kingIndex + 9];
+    for (const a of pawnAttacks) {
+        if (a >= 0 && a < 64 && Math.abs(Math.floor(a / 8) - row) === 1) {
+            if (squares[a].classList.contains(`pawn-${enemyColor}`)) return true;
+        }
+    }
+
+    // --- Check for knight attacks ---
+    const knightOffsets = [-17, -15, -10, -6, 6, 10, 15, 17];
+    for (const offset of knightOffsets) {
+        const pos = kingIndex + offset;
+        if (pos < 0 || pos >= 64) continue;
+        const pr = Math.floor(pos / 8), pc = pos % 8;
+        if (Math.abs(pr - row) === 2 && Math.abs(pc - col) === 1 ||
+            Math.abs(pr - row) === 1 && Math.abs(pc - col) === 2) {
+            if (squares[pos].classList.contains(`knight-${enemyColor}`)) return true;
+        }
+    }
+
+    // --- Check for diagonal attacks (bishops + queens) ---
+    const diagonalDirs = [-9, -7, 7, 9];
+    for (const dir of diagonalDirs) {
+        let pos = kingIndex + dir;
+        while (pos >= 0 && pos < 64 && Math.abs((pos % 8) - ((pos - dir) % 8)) === 1) {
+            const sq = squares[pos];
+            if (sq.classList.contains("piece")) {
+                if (sq.classList.contains(`bishop-${enemyColor}`) ||
+                    sq.classList.contains(`queen-${enemyColor}`)) return true;
+                break;
+            }
+            pos += dir;
+        }
+    }
+
+    // --- Check for straight attacks (rooks + queens) ---
+    const straightDirs = [-8, 8, -1, 1];
+    for (const dir of straightDirs) {
+        let pos = kingIndex + dir;
+        while (pos >= 0 && pos < 64) {
+            if ((dir === 1 || dir === -1) &&
+                Math.floor(pos / 8) !== Math.floor((pos - dir) / 8)) break;
+            const sq = squares[pos];
+            if (sq.classList.contains("piece")) {
+                if (sq.classList.contains(`rook-${enemyColor}`) ||
+                    sq.classList.contains(`queen-${enemyColor}`)) return true;
+                break;
+            }
+            pos += dir;
+        }
+    }
+
+    // --- Check for king attacks (adjacent squares) ---
+    const kingOffsets = [-9, -8, -7, -1, 1, 7, 8, 9];
+    for (const offset of kingOffsets) {
+        const pos = kingIndex + offset;
+        if (pos < 0 || pos >= 64) continue;
+        const pr = Math.floor(pos / 8), pc = pos % 8;
+        if (Math.abs(pr - row) <= 1 && Math.abs(pc - col) <= 1) {
+            if (squares[pos].classList.contains(`king-${enemyColor}`)) return true;
+        }
+    }
+
+    return false;
 }
-isKingCheck()
+
+
 
 
 
@@ -497,7 +580,7 @@ isKingCheck()
 
 console.log(isCheck(60, "w"))
 
-document.addEventListener('keydown', function(event) {
+document.addEventListener('keydown', function (event) {
     if (event.key.toLowerCase() === 'f') {
         // Load the audio
         const audio = new Audio('sabrina.mp3'); // <-- make sure the path is correct
@@ -519,5 +602,9 @@ document.addEventListener('keydown', function(event) {
         });
     }
 });
+
+
+
+
 
 const winbox = document.getElementsByClassName("winBox")[0].style.display = "none";
