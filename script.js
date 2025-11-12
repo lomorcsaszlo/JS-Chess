@@ -91,10 +91,11 @@ for (let i = 0; i < squares.length; i++) {
             if (pieceClass) {
                 console.log(pieceClass, i);
             } else {
-                console.log("Selected a square with no piece.");
+                console.log("Selected a square w426ith no piece.");
             }
 
             legals = getLegels(pieceClass, i); // store it globally
+
             console.log(legals[0])
             for (let i = 0; i < squares.length; i++) {
                 if (legals.includes(i)) {
@@ -244,6 +245,7 @@ function getLegels(name, index) {
     }
 
     // ♔ WHITE KING
+    // ♔ WHITE KING
     if (name === "king-w") {
         const moves = [-9, -8, -7, -1, 1, 7, 8, 9];
         const row = Math.floor(index / 8);
@@ -251,19 +253,39 @@ function getLegels(name, index) {
 
         for (const moveOffset of moves) {
             const move = index + moveOffset;
-            if (!isKingCheck() && (move < 0 || move >= 64)) continue;
+            if (move < 0 || move >= 64) continue;
 
             const moveRow = Math.floor(move / 8);
             const moveCol = move % 8;
-            if (!isKingCheck() && (Math.abs(moveRow - row) > 1 || Math.abs(moveCol - col) > 1)) continue;
+            if (Math.abs(moveRow - row) > 1 || Math.abs(moveCol - col) > 1) continue;
+            if (isOccupiedWhite(move)) continue;
 
-            if (!isKingCheck() && !isOccupiedWhite(move)) legalIndexes.push(move);
+            // --- simulate move to test if it causes check ---
+            const originalClasses = Array.from(squares[move].classList);
+            const fromClasses = Array.from(squares[index].classList);
+
+            // Temporarily move king
+            squares[move].classList.add("king-w", "piece");
+            squares[index].classList.remove("king-w", "piece");
+
+            const inCheck = isKingCheck(); // test if king still in check
+
+            // Undo temporary move
+            squares[index].classList.add("king-w", "piece");
+            squares[move].classList.remove("king-w", "piece");
+            for (const c of originalClasses) {
+                if (!["square", "light-square", "dark-square"].includes(c)) {
+                    squares[move].classList.add(c);
+                }
+            }
+
+            if (!inCheck) {
+                legalIndexes.push(move);
+            }
         }
-
-        // Castling (optional example — needs more logic)
-        
     }
-    
+
+
 
     return legalIndexes;
 }
@@ -604,7 +626,18 @@ document.addEventListener('keydown', function (event) {
 });
 
 
+function isMate(){
+    let kingIndex = null;
 
+    for (let i = 0; i < squares.length; i++) {
+        if (squares[i].classList.contains("king-w")) {
+            kingIndex = i;
+            break;
+        }
+    }
+    legals = getLegels("king-w", kingIndex)
+    return legals.length
+}
 
 
 const winbox = document.getElementsByClassName("winBox")[0].style.display = "none";
