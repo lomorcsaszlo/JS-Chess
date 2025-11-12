@@ -601,11 +601,17 @@ function Quotes(){
     const quotes = [
         "Egyenesedjünk fel ha már törzsfejlődésileg is sikerült!",
         "Akkor játszunk népi játékot!",
-        "Ne csttingessél mert eltöröm az ujjad!",
+        "Ne csettingessél mert eltöröm az ujjad!",
         "Bendegúz be írjam a 24 egyest?", 
         "18-as versenyző ne sakkozzon!",
         "14-es versenyző ne rágózzon!",
-        "És most jöjjön a nap vicce: Az egér a piros gomb felett.. 3.. 2.. 1.."
+        "És most jöjjön a nap vicce: Az egér a piros gomb felett.. 3.. 2.. 1..",
+        "Beiratkoztam egy reinkarnációs tanfolyamra, drága volt, de egyszer élünk",
+        "Ez is egy dinoszauruszos játék...",
+        "Akkor zanzásítsuk!",
+        "Ne feletjs el menteni!",
+        "Úgy hallottam, a társaság szeretne írni",
+        "Nyissunk meg egy Accesst"
     ];
 
     const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
@@ -613,9 +619,7 @@ function Quotes(){
     moveBox.innerText = randomQuote;
     moveBox.style.display ="block";
 
-    setTimeout(() => {
-        moveBox.style.display = "none";
-    },10000);
+    
 }
 
 
