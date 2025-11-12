@@ -142,6 +142,7 @@ for (let i = 0; i < squares.length; i++) {
                 MovePiece(moveNote);
                 fullmoveNumber += 1;
             }).catch(err => console.error("Error getting move:", err));
+            Quotes();
 
             document.querySelectorAll(".legalMove").forEach(sq => sq.classList.remove("legalMove"));
             selectedSquare = null;
@@ -423,6 +424,8 @@ function MovePiece(chess_note) {
     removePiece.classList.remove("piece")
     removePiece.classList.remove(removePiece.classList[2])
 
+    
+
 
 }
 function isCheck(index, color) {
@@ -571,6 +574,28 @@ function isKingCheck() {
     return false;
 }
 
+function Quotes(){
+    const moveBox = document.querySelector(".move-box p")
+    const quotes = [
+        "Egyenesedjünk fel ha már törzsfejlődésileg is sikerült!",
+        "Akkor játszunk népi játékot!",
+        "Ne csttingessél mert eltöröm az ujjad!",
+        "Bendegúz be írjam a 24 egyest?", 
+        "18-as versenyző ne sakkozzon!",
+        "14-es versenyző ne rágózzon!",
+        "És most jöjjön a nap vicce: Az egér a piros gomb felett.. 3.. 2.. 1.."
+    ];
+
+    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+
+    moveBox.innerText = randomQuote;
+    moveBox.style.display ="block";
+
+    setTimeout(() => {
+        moveBox.style.display = "none";
+    },10000);
+}
+
 
 
 
@@ -602,6 +627,7 @@ document.addEventListener('keydown', function (event) {
         });
     }
 });
+
 
 
 
