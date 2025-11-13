@@ -101,14 +101,17 @@ body {
     justify-content: flex-start;
     width: 100%;
     border-radius: 50%;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
 .move-box p{
     padding: 30px;
     color: var(--backgroundColor);
     background-color: #ffff;
-    border-radius: 5%;
+    border-radius: 20px;
 }
-
+.square:nth-child(1){
+    border-radius: 10px 0 0 0 ;
+}
 
 .square {
     width: 75px;

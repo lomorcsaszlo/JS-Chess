@@ -7,7 +7,9 @@ let halfmoveClock = 0;
 let fullmoveNumber = 1;
 
 //teszt
-
+let kingHasMoved = false;
+let kingsideRookHasMoved = false;
+let queensideRookHasMoved = false;
 
 
 function GenerateBoard() {
@@ -127,6 +129,23 @@ for (let i = 0; i < squares.length; i++) {
             } else if (pieceClasses.some(c => c.startsWith("pawn"))) {
                 halfmoveClock = 0;
             }
+            //SACRIFICE THE ROOOOOOK
+            const selectedIndex = Array.from(squares).indexOf(selectedSquare);
+            console.log(selectedIndex, "LÉPÉS INDEXE VAGY HOGY")
+            if (pieceClasses.some(c => c.startsWith("rook")) && selectedIndex == 63) {
+                kingsideRookHasMoved == true;
+                console.log("kingside rook moved")
+            }
+            if (pieceClasses.some(c => c.startsWith("rook")) && selectedIndex == 56) {
+                queensideRookHasMoved == true;
+                console.log("queenside rook moved")
+            }
+            if (pieceClasses.some(c => c.startsWith("king"))) {
+                kingHasMoved == true;
+                console.log("king  moved")
+            }
+
+
             const oldPieceClasses = Array.from(square.classList).filter(
                 c =>
                     !["square", "light-square", "dark-square", "highlighted"].includes(c)
@@ -283,6 +302,7 @@ function getLegels(name, index) {
             if (!inCheck) {
                 legalIndexes.push(move);
             }
+            
         }
     }
 
@@ -290,6 +310,7 @@ function getLegels(name, index) {
 
     return legalIndexes;
 }
+
 
 
 
