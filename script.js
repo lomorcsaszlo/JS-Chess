@@ -133,17 +133,37 @@ for (let i = 0; i < squares.length; i++) {
             const selectedIndex = Array.from(squares).indexOf(selectedSquare);
             console.log(selectedIndex, "LÉPÉS INDEXE VAGY HOGY")
             if (pieceClasses.some(c => c.startsWith("rook")) && selectedIndex == 63) {
-                kingsideRookHasMoved == true;
+                kingsideRookHasMoved = true;
                 console.log("kingside rook moved")
             }
             if (pieceClasses.some(c => c.startsWith("rook")) && selectedIndex == 56) {
-                queensideRookHasMoved == true;
+                queensideRookHasMoved = true;
                 console.log("queenside rook moved")
             }
             if (pieceClasses.some(c => c.startsWith("king"))) {
-                kingHasMoved == true;
+                kingHasMoved = true;
                 console.log("king  moved")
             }
+            console.log(kingHasMoved)
+            if (pieceClasses.some(c => c.startsWith("king")) && targetIndex == 62) {
+                
+                for (let i = 0; i < squares.length; i++) {
+                    const classes = Array.from(squares[i].classList);
+                    if (classes.some(c => c.includes("rook-w")) && i == 63) {
+                        MovePiece("h1f1")
+                    }
+                }
+            }
+            if (pieceClasses.some(c => c.startsWith("king")) && targetIndex == 58) {
+                for (let i = 0; i < squares.length; i++) {
+                    const classes = Array.from(squares[i].classList);
+                    if (classes.some(c => c.includes("rook-w")) && i == 56) {
+                        MovePiece("a1d1")
+                    }
+                }
+            }
+
+
 
 
             const oldPieceClasses = Array.from(square.classList).filter(
@@ -302,7 +322,108 @@ function getLegels(name, index) {
             if (!inCheck) {
                 legalIndexes.push(move);
             }
-            
+
+        }
+        // Kingside castling (O-O)
+        if (!kingHasMoved && !kingsideRookHasMoved) {
+            const kingsidePath = [61, 62]; // f1, g1
+            let kingsideValid = true;
+
+            // Check if squares between king and rook are empty
+            for (const squareIndex of kingsidePath) {
+                if (isOccupiedWhite(squareIndex) || isOccupiedBlack(squareIndex)) {
+                    kingsideValid = false;
+                    break;
+                }
+            }
+
+            // Check if king doesn't move through check
+            if (kingsideValid) {
+                let castlingValid = true;
+
+                // Check if king is not in check
+                if (isKingCheck()) {
+                    castlingValid = false;
+                }
+
+                // Check if king doesn't move through attacked squares
+                for (const checkIndex of [61, 62]) { // f1, g1
+                    // Simulate king position to check for attack
+                    const originalClasses = Array.from(squares[checkIndex].classList);
+                    squares[checkIndex].classList.add("king-w", "piece");
+                    squares[index].classList.remove("king-w", "piece");
+
+                    if (isKingCheck()) {
+                        castlingValid = false;
+                    }
+
+                    // Restore original state
+                    squares[index].classList.add("king-w", "piece");
+                    squares[checkIndex].classList.remove("king-w", "piece");
+                    for (const c of originalClasses) {
+                        if (!["square", "light-square", "dark-square"].includes(c)) {
+                            squares[checkIndex].classList.add(c);
+                        }
+                    }
+
+                    if (!castlingValid) break;
+                }
+
+                if (castlingValid) {
+                    legalIndexes.push(62); // g1 for kingside castling
+                }
+            }
+        }
+
+        // Queenside castling (O-O-O)
+        if (!kingHasMoved && !queensideRookHasMoved) {
+            const queensidePath = [59, 58, 57]; // d1, c1, b1
+            let queensideValid = true;
+
+            // Check if squares between king and rook are empty
+            for (const squareIndex of queensidePath) {
+                if (isOccupiedWhite(squareIndex) || isOccupiedBlack(squareIndex)) {
+                    queensideValid = false;
+                    break;
+                }
+            }
+
+            // Check if king doesn't move through check
+            if (queensideValid) {
+                let castlingValid = true;
+
+                // Check if king is not in check
+                if (isKingCheck()) {
+                    castlingValid = false;
+                }
+
+                // Check if king doesn't move through attacked squares
+                for (const checkIndex of [59, 58]) { // d1, c1 (b1 doesn't need checking for castling)
+                    // Simulate king position to check for attack
+                    const originalClasses = Array.from(squares[checkIndex].classList);
+                    squares[checkIndex].classList.add("king-w", "piece");
+                    squares[index].classList.remove("king-w", "piece");
+
+                    if (isKingCheck()) {
+                        castlingValid = false;
+                    }
+
+                    // Restore original state
+                    squares[index].classList.add("king-w", "piece");
+                    squares[checkIndex].classList.remove("king-w", "piece");
+                    for (const c of originalClasses) {
+                        if (!["square", "light-square", "dark-square"].includes(c)) {
+                            squares[checkIndex].classList.add(c);
+                        }
+                    }
+
+                    if (!castlingValid) break;
+                }
+
+                if (castlingValid) {
+                    legalIndexes.push(58); // c1 for queenside castling
+                }
+            }
         }
     }
 
@@ -467,7 +588,7 @@ function MovePiece(chess_note) {
     removePiece.classList.remove("piece")
     removePiece.classList.remove(removePiece.classList[2])
 
-    
+
 
 
 }
@@ -617,13 +738,13 @@ function isKingCheck() {
     return false;
 }
 
-function Quotes(){
+function Quotes() {
     const moveBox = document.querySelector(".move-box p")
     const quotes = [
         "Egyenesedjünk fel ha már törzsfejlődésileg is sikerült!",
         "Akkor játszunk népi játékot!",
         "Ne csettingessél mert eltöröm az ujjad!",
-        "Bendegúz be írjam a 24 egyest?", 
+        "Bendegúz be írjam a 24 egyest?",
         "18-as versenyző ne sakkozzon!",
         "14-es versenyző ne rágózzon!",
         "És most jöjjön a nap vicce: Az egér a piros gomb felett.. 3.. 2.. 1..",
@@ -638,9 +759,9 @@ function Quotes(){
     const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
 
     moveBox.innerText = randomQuote;
-    moveBox.style.display ="block";
+    moveBox.style.display = "block";
 
-    
+
 }
 
 
@@ -676,7 +797,7 @@ document.addEventListener('keydown', function (event) {
 });
 
 
-function isMate(){
+function isMate() {
     let kingIndex = null;
 
     for (let i = 0; i < squares.length; i++) {
