@@ -10,6 +10,7 @@ async function postChessApi(data = {}) {
 
     if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
+        
     }
 
     return response.json();
@@ -31,6 +32,28 @@ export async function getBestMove(fen) {
         return null;
     }
 }
+
+async function getBestMoveAlternative(fen) {
+  const url = `https://www.chessdb.cn/cdb.php?action=querybest&board=${encodeURIComponent(fen)}`;
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+  const text = await response.text();
+
+  // The API returns something like "move:e2e4"
+  const match = text.match(/move:([a-h][1-8][a-h][1-8][qbnr]?)/);
+  const bestMove = match ? match[1] : null;
+
+  console.log("Best move:", bestMove); // ✅ Prints something like "e2e4"
+  return bestMove;
+}
+
+// Example usage:
+getBestMoveAlternative("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+
+
+getBestMoveAlternative("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+
+
 
 // 3. Example usage:
 getBestMove("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");

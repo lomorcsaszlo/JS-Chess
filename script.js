@@ -159,6 +159,7 @@ for (let i = 0; i < squares.length; i++) {
                     const classes = Array.from(squares[i].classList);
                     if (classes.some(c => c.includes("rook-w")) && i == 56) {
                         MovePiece("a1d1")
+                            
                     }
                 }
             }
@@ -181,7 +182,7 @@ for (let i = 0; i < squares.length; i++) {
                 console.log("Best move:", moveNote);
                 MovePiece(moveNote);
                 fullmoveNumber += 1;
-            }).catch(err => console.error("Error getting move:", err));
+            }).catch(err => alert("A szerver nem működik :("));
             Quotes();
 
             document.querySelectorAll(".legalMove").forEach(sq => sq.classList.remove("legalMove"));
@@ -737,14 +738,14 @@ function isKingCheck() {
 
     return false;
 }
-
+const moveBox = document.querySelector(".move-box p").style.display = "none";
 function Quotes() {
     const moveBox = document.querySelector(".move-box p")
     const quotes = [
         "Egyenesedjünk fel ha már törzsfejlődésileg is sikerült!",
         "Akkor játszunk népi játékot!",
         "Ne csettingessél mert eltöröm az ujjad!",
-        "Bendegúz be írjam a 24 egyest?",
+        "Bendegúz beírjam a 24 egyest?",
         "18-as versenyző ne sakkozzon!",
         "14-es versenyző ne rágózzon!",
         "És most jöjjön a nap vicce: Az egér a piros gomb felett.. 3.. 2.. 1..",
