@@ -43,7 +43,7 @@ async function getBestMoveAlternative(fen) {
   const match = text.match(/move:([a-h][1-8][a-h][1-8][qbnr]?)/);
   const bestMove = match ? match[1] : null;
 
-  console.log("Best move:", bestMove); // ✅ Prints something like "e2e4"
+  console.log("Best move2:", bestMove); // ✅ Prints something like "e2e4"
   return bestMove;
 }
 
@@ -51,7 +51,7 @@ async function getBestMoveAlternative(fen) {
 getBestMoveAlternative("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
 
-getBestMoveAlternative("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+
 
 
 
