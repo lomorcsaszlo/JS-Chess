@@ -1,8 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
 * {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
 }
+
+
+
 
 /* DIZAJN SZINEK */
 :root {
@@ -23,7 +27,7 @@
     height: 600px;
     border: 4px solid #333;
     border-radius: 2px;
-    margin-top: 150px;
+   
 }
 
 
@@ -46,7 +50,7 @@ body {
     justify-content: center;
     align-items: center;
     background-color: var(--backgroundColor);
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-family: "Raleway", arial;
 
 }
 
@@ -312,6 +316,8 @@ nav ul li a:hover {
     color: var(--darkSquare);
     /* A golden color on hover */
 }
+
+
 
 
 /*HOVERING CARDS*/
