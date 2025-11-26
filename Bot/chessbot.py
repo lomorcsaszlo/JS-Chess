@@ -3,40 +3,32 @@ from flask_cors import CORS
 import chess
 import random
 
-def teszt():
-    data = request.get_json() or {}
-
-    FEN = data.get("fen", "Unknown")
-
-    board = chess.Board(FEN)
-
-    board.push(list(board.legal_moves)[0])
-    
-
-    
-    return board.fen()
-
-
-
 app = Flask(__name__)
-CORS(app)
+CORS(app)  # Allow requests from JS frontend
 
-@app.post("/api/hello")
+def get_random_move(fen):
+    """
+    Returns a random legal move in UCI format for a given FEN.
+    """
+    board = chess.Board(fen)
+    legal_moves = list(board.legal_moves)
+    if not legal_moves:
+        return None  # No legal moves (checkmate/stalemate)
+    move = random.choice(legal_moves)
+    return move.uci()  # e.g., "e2e4"
 
-def hello():
+@app.post("/api/bestmove")
+def best_move():
     data = request.get_json() or {}
+    fen = data.get("fen")
+    if not fen:
+        return jsonify({"error": "FEN is required"}), 400
 
-    name = data.get("fen", "Unknown")
-    
+    move = get_random_move(fen)
+    if not move:
+        return jsonify({"error": "No legal moves available"}), 400
 
-    return jsonify({
-        # "reply": f"{name}",
-        "reply": f"{teszt()}",
-    })
+    return jsonify({"move": move})
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-
-
-teszt()

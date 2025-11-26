@@ -22,6 +22,20 @@
     margin-top: 150px;
 }
 
+
+#chessboardMy {
+    display: grid;
+    grid-template-columns: repeat(8, 75px);
+    grid-template-rows: repeat(8, 75px);
+    width: 600px;
+    height: 600px;
+    border: 4px solid #333;
+    border-radius: 2px;
+    margin-top: 150px;
+}
+
+
+
 body {
     display: flex;
     flex-direction: column;
