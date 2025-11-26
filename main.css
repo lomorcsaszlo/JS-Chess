@@ -1,10 +1,31 @@
 .cardChose{
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-    width: 7rem;
-    height: 7rem;
-    
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;    
+    height: 100%;
+    width: 100%;
+    padding: 1rem;
 }
 .cardChose a{
     color: white;
     text-decoration: none;
 }
+.header{
+    background-color: #525252;
+    padding: 0;
+    margin: 0;
+}
+
+/* Basic reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1c1c1c;
+    color: #fff;
+}
+
+/* Header styling */

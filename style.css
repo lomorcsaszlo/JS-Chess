@@ -1,4 +1,8 @@
-*{padding: 0; margin: 0; box-sizing: border-box;}
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
 
 /* DIZAJN SZINEK */
 :root {
@@ -41,74 +45,98 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
     background-color: var(--backgroundColor);
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
-    
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+
 }
-.hz{
+
+.hz {
     position: absolute;
-    top: 30px;     /* távolság a lap tetejétől */
-    left: 670px;    /* távolság a bal oldaltól */
+    top: 30px;
+    /* távolság a lap tetejétől */
+    left: 670px;
+    /* távolság a bal oldaltól */
     display: flex;
     align-items: center;
     border-radius: 8px;
     padding: 8px 12px;
-    z-index: 10;   /* hogy a tábla fölött maradjon */
+    z-index: 10;
+    /* hogy a tábla fölött maradjon */
 }
 
 @keyframes colorFlash {
-    0% { background-color: red; }
-    25% { background-color: yellow; }
-    50% { background-color: blue; }
-    75% { background-color: green; }
-    100% { background-color: red; }
+    0% {
+        background-color: red;
+    }
+
+    25% {
+        background-color: yellow;
+    }
+
+    50% {
+        background-color: blue;
+    }
+
+    75% {
+        background-color: green;
+    }
+
+    100% {
+        background-color: red;
+    }
 }
 
 .flash-square {
-    animation: colorFlash 0.8s linear 8; /* Change 0.3s for faster/slower flashing */
+    animation: colorFlash 0.8s linear 8;
+    /* Change 0.3s for faster/slower flashing */
 }
 
 
 
-.GMtag{
+.GMtag {
     background-color: rgb(141, 14, 14);
     margin-right: 11px;
     border-radius: 4px;
     padding: 5px;
 }
-.hz img{
-   width: 190px;
-   height: 180px;
+
+.hz img {
+    width: 190px;
+    height: 180px;
 }
-.hz h3{
+
+.hz h3 {
     color: #fff;
 }
-.hz h4{
+
+.hz h4 {
     color: #fff;
 }
+
 /*box div jobbra*/
-.box{
+.box {
     position: absolute;
     left: calc(50% + 300px + 20px);
-    top: calc(50% - 300px); 
+    top: calc(50% - 300px);
     width: 500px;
     height: 680px;
     display: flex;
-    flex-direction: row;          
-    align-items: flex-start;     
+    flex-direction: row;
+    align-items: flex-start;
     background-color: #1c1f20;
     border-radius: 8px;
     padding: 10px;
-    gap: 20px;                   
+    gap: 20px;
     z-index: 5;
 }
-.box img{
+
+.box img {
     width: 200px;
     height: 200px;
     border-radius: 50%;
     margin: 0;
 }
+
 .move-box {
     display: flex;
     flex-direction: column;
@@ -117,14 +145,16 @@ body {
     border-radius: 50%;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
-.move-box p{
+
+.move-box p {
     padding: 30px;
     color: var(--backgroundColor);
     background-color: #ffff;
     border-radius: 20px;
 }
-.square:nth-child(1){
-    border-radius: 10px 0 0 0 ;
+
+.square:nth-child(1) {
+    border-radius: 10px 0 0 0;
 }
 
 .square {
@@ -145,45 +175,83 @@ body {
     background-repeat: no-repeat;
     background-position: center;
 }
-  
-.pawn-w    { background-image: url("./pieces-svg/wp.svg"); }
-.rook-w    { background-image: url("./pieces-svg/wr.svg"); }
-.knight-w  { background-image: url("./pieces-svg/wn.svg"); }
-.bishop-w  { background-image: url("./pieces-svg/wb.svg"); }
-.queen-w   { background-image: url("./pieces-svg/wq.svg"); }
-.king-w    { background-image: url("./pieces-svg/wk.svg"); }
 
-.pawn-b    { background-image: url("./pieces-svg/bp.svg"); }
-.rook-b    { background-image: url("./pieces-svg/br.svg"); }
-.knight-b  { background-image: url("./pieces-svg/bn.svg"); }
-.bishop-b  { background-image: url("./pieces-svg/bb.svg"); }
-.queen-b   { background-image: url("./pieces-svg/bq.svg"); }
-.king-b    { background-image: url("./pieces-svg/bk.svg"); }
+.pawn-w {
+    background-image: url("./pieces-svg/wp.svg");
+}
+
+.rook-w {
+    background-image: url("./pieces-svg/wr.svg");
+}
+
+.knight-w {
+    background-image: url("./pieces-svg/wn.svg");
+}
+
+.bishop-w {
+    background-image: url("./pieces-svg/wb.svg");
+}
+
+.queen-w {
+    background-image: url("./pieces-svg/wq.svg");
+}
+
+.king-w {
+    background-image: url("./pieces-svg/wk.svg");
+}
+
+.pawn-b {
+    background-image: url("./pieces-svg/bp.svg");
+}
+
+.rook-b {
+    background-image: url("./pieces-svg/br.svg");
+}
+
+.knight-b {
+    background-image: url("./pieces-svg/bn.svg");
+}
+
+.bishop-b {
+    background-image: url("./pieces-svg/bb.svg");
+}
+
+.queen-b {
+    background-image: url("./pieces-svg/bq.svg");
+}
+
+.king-b {
+    background-image: url("./pieces-svg/bk.svg");
+}
 
 
 .highlighted {
     opacity: 0.75;
-  }
-  
+}
 
-.legalMove{
+
+.legalMove {
     opacity: 0.75;
-    
+
 }
 
 .winBox {
-    position: fixed; /* stays centered even if you scroll */
+    position: fixed;
+    /* stays centered even if you scroll */
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); /* centers it perfectly */
+    transform: translate(-50%, -50%);
+    /* centers it perfectly */
     text-align: center;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     background-color: var(--backgroundColor);
     padding: 30px;
     color: var(--darkSquare);
     border-radius: 10px;
-    z-index: 1000; /* make sure it appears above everything */
+    z-index: 1000;
+    /* make sure it appears above everything */
 }
+
 .buttons {
     display: inline-block;
     background-color: var(--lightSquare);
@@ -199,15 +267,52 @@ body {
     text-align: center;
     user-select: none;
     margin: 10px;
-  }
+}
 
-  .buttons:hover {
+.buttons:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
-  }
+}
 
-  .buttons:active {
+.buttons:active {
     transform: translateY(0);
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-  }
+}
+
+
+
+header {
+    background-color:  var(--backgroundColor);
+    /* Dark background for the header */
+    color: #fff;
+    padding: 10px 10px 0 0;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 100px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+nav ul {
+    list-style-type: none;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+    color: var(--darkSquare);
+    /* A golden color on hover */
+}
+
+
+/*HOVERING CARDS*/
 
