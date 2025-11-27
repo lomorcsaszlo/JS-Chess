@@ -5,7 +5,7 @@ const board = document.getElementById("chessboard");
 let isWhiteMoves = false;
 let halfmoveClock = 0;
 let fullmoveNumber = 1;
-
+let canMove = true;
 //teszt
 let kingHasMoved = false;
 let kingsideRookHasMoved = false;
@@ -113,8 +113,8 @@ for (let i = 0; i < squares.length; i++) {
 
         // --- BABU LÉPÉS ---
         const targetIndex = Array.from(squares).indexOf(square);
-        if (selectedSquare && selectedSquare !== square && legals.includes(targetIndex)) {
-
+        if (selectedSquare && selectedSquare !== square && legals.includes(targetIndex) && canMove) {
+            canMove = false;
 
             console.log(indexToNote(targetIndex))
             const pieceClasses = Array.from(selectedSquare.classList).filter(
@@ -146,7 +146,7 @@ for (let i = 0; i < squares.length; i++) {
             }
             console.log(kingHasMoved)
             if (pieceClasses.some(c => c.startsWith("king")) && targetIndex == 62) {
-                
+
                 for (let i = 0; i < squares.length; i++) {
                     const classes = Array.from(squares[i].classList);
                     if (classes.some(c => c.includes("rook-w")) && i == 63) {
@@ -159,7 +159,7 @@ for (let i = 0; i < squares.length; i++) {
                     const classes = Array.from(squares[i].classList);
                     if (classes.some(c => c.includes("rook-w")) && i == 56) {
                         MovePiece("a1d1")
-                            
+
                     }
                 }
             }
@@ -178,12 +178,17 @@ for (let i = 0; i < squares.length; i++) {
             const fen = getFen();
 
 
-            getBestMove(fen).then(moveNote => {
-                console.log("Best move:", moveNote);
-                MovePiece(moveNote);
-                fullmoveNumber += 1;
-            }).catch(err => alert("A szerver nem működik :("));
-            Quotes();
+            setTimeout(() => {
+                getBestMove(fen).then(moveNote => {
+                    console.log("Best move:", moveNote);
+                    MovePiece(moveNote);
+                    fullmoveNumber += 1;
+                    canMove = true;
+                }).catch(err => alert("A szerver nem működik :("));
+
+                Quotes();
+            }, 600); // delay in ms
+
 
             document.querySelectorAll(".legalMove").forEach(sq => sq.classList.remove("legalMove"));
             selectedSquare = null;
@@ -742,20 +747,41 @@ const moveBox = document.querySelector(".move-box p").style.display = "none";
 function Quotes() {
     const moveBox = document.querySelector(".move-box p")
     const quotes = [
-        "Egyenesedjünk fel ha már törzsfejlődésileg is sikerült!",
-        "Akkor játszunk népi játékot!",
-        "Ne csettingessél mert eltöröm az ujjad!",
-        "Bendegúz beírjam a 24 egyest?",
-        "18-as versenyző ne sakkozzon!",
-        "14-es versenyző ne rágózzon!",
-        "És most jöjjön a nap vicce: Az egér a piros gomb felett.. 3.. 2.. 1..",
-        "Beiratkoztam egy reinkarnációs tanfolyamra, drága volt, de egyszer élünk",
-        "Ez is egy dinoszauruszos játék...",
-        "Akkor zanzásítsuk!",
-        "Ne feletjs el menteni!",
-        "Úgy hallottam, a társaság szeretne írni",
-        "Nyissunk meg egy Accesst"
+        "I believe in America. America has made my fortune.",
+        "I'm gonna make you an offer you can't refuse",
+        "And I raised my daughter in the American fashion.",
+        "I gave her freedom, but I taught her never to dishonor her family.",
+        "She found a boyfriend; not an Italian.",
+        "She went to the movies with him; she stayed out late. I didn't protest.",
+        "Two months ago, he took her for a drive, with another boyfriend.",
+        "They made her drink whiskey. And then they tried to take advantage of her.",
+        "She resisted. She kept her honor. So they beat her, like an animal.",
+        "When I went to the hospital, her nose was broken.",
+        "Her jaw was shattered, held together by wire.",
+        "She couldn't even weep because of the pain. But I wept.",
+        "She was the light of my life — beautiful girl. Now she will never be beautiful again.",
+        "I went to the police, like a good American.",
+        "These two boys were brought to trial.",
+        "The judge sentenced them to three years in prison — suspended sentence.",
+        "They went free that very day!",
+        "I stood in the courtroom like a fool, and they smiled at me.",
+        "Then I said to my wife: 'For justice, we must go to Don Corleone.'",
+        "Why did you go to the police? Why didn't you come to me first?",
+        "What do you want of me? Tell me anything.",
+        "We've known each other many years, but this is the first time you came to me for help.",
+        "You never wanted my friendship.",
+        "You were afraid to be in my debt.",
+        "You found paradise in America, had a good trade, made a good living.",
+        "The police protected you; there were courts of law.",
+        "And you didn't need a friend like me.",
+        "But now you come to me and you say: 'Don Corleone, give me justice.'",
+        "But you don't ask with respect.",
+        "You don't offer friendship.",
+        "You don't even think to call me Godfather.",
+        "Instead, you come into my house on the day my daughter is to be married,",
+        "And you ask me to do murder, for money."
     ];
+
 
     const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
 
@@ -814,3 +840,6 @@ function isMate() {
 
 
 const winbox = document.getElementsByClassName("winBox")[0].style.display = "none";
+
+
+
