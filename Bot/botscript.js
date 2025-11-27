@@ -1,5 +1,9 @@
 import { getBestMove } from './bot.js'
 
+document.documentElement.style.setProperty('--lightSquare', '#4E8098');
+
+
+
 const squares = document.getElementsByClassName("square");
 const board = document.getElementById("chessboard");
 let isWhiteMoves = false;
