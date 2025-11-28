@@ -175,7 +175,7 @@ for (let i = 0; i < squares.length; i++) {
             selectedSquare.classList.remove(...pieceClasses);
 
             const fen = getFen();
-
+            whiteTurn = !whiteTurn
 
 
 
@@ -184,6 +184,8 @@ for (let i = 0; i < squares.length; i++) {
             selectedSquare = null;
 
             legals = [];
+            
+            console.log("o")
             return;
         }
 
@@ -204,7 +206,8 @@ function getLegels(name, index) {
     const sameRow = (a, b) => Math.floor(a / 8) === Math.floor(b / 8);
 
     // ♙ WHITE PAWN
-    if (name === "pawn-w") {
+    if (name === "pawn-w" && whiteTurn) {
+        console.log(whiteTurn)
         const oneForward = index - 8;
         const twoForward = index - 16;
         const captures = [index - 7, index - 9];
@@ -226,7 +229,7 @@ function getLegels(name, index) {
     }
 
     // ♘ WHITE KNIGHT
-    if (name === "knight-w") {
+    if (name === "knight-w" && whiteTurn) {
         const knightMoves = [-17, -15, -10, -6, 6, 10, 15, 17];
         const row = Math.floor(index / 8);
         const col = index % 8;
@@ -247,7 +250,7 @@ function getLegels(name, index) {
 
 
     // ♗ WHITE BISHOP
-    if (name === "bishop-w" || name === "queen-w") {
+    if (name === "bishop-w" && whiteTurn || name === "queen-w" && whiteTurn) {
         const directions = [-9, -7, 7, 9];
         for (const dir of directions) {
             let pos = index + dir;
@@ -266,7 +269,7 @@ function getLegels(name, index) {
     }
 
     // ♖ WHITE ROOK
-    if (name === "rook-w" || name === "queen-w") {
+    if (name === "rook-w" || name === "queen-w" && whiteTurn) {
         const directions = [-8, 8, -1, 1];
         for (const dir of directions) {
             let pos = index + dir;
@@ -283,7 +286,7 @@ function getLegels(name, index) {
 
     // ♔ WHITE KING
     // ♔ WHITE KING
-    if (name === "king-w") {
+    if (name === "king-w" && whiteTurn) {
         const moves = [-9, -8, -7, -1, 1, 7, 8, 9];
         const row = Math.floor(index / 8);
         const col = index % 8;
@@ -426,7 +429,7 @@ function getLegels(name, index) {
     // ---------------- BLACK PIECES ----------------
 
     // ♟ BLACK PAWN
-    if (name === "pawn-b") {
+    if (name === "pawn-b" && !whiteTurn) {
         const oneForward = index + 8;
         const twoForward = index + 16;
         const captures = [index + 7, index + 9];
@@ -452,7 +455,7 @@ function getLegels(name, index) {
     }
 
     // ♞ BLACK KNIGHT
-    if (name === "knight-b") {
+    if (name === "knight-b" && !whiteTurn) {
         const knightMoves = [-17, -15, -10, -6, 6, 10, 15, 17];
         const row = Math.floor(index / 8);
         const col = index % 8;
@@ -473,7 +476,7 @@ function getLegels(name, index) {
     }
 
     // ♝ BLACK BISHOP / ♛ BLACK QUEEN (diagonals)
-    if (name === "bishop-b" || name === "queen-b") {
+    if (name === "bishop-b" || name === "queen-b" && !isWhiteMoves) {
         const directions = [-9, -7, 7, 9];
         for (const dir of directions) {
             let pos = index + dir;
@@ -488,7 +491,7 @@ function getLegels(name, index) {
     }
 
     // ♜ BLACK ROOK / ♛ BLACK QUEEN (straight)
-    if (name === "rook-b" || name === "queen-b") {
+    if (name === "rook-b" || name === "queen-b" && !whiteTurn) {
         const directions = [-8, 8, -1, 1];
         for (const dir of directions) {
             let pos = index + dir;
@@ -504,7 +507,7 @@ function getLegels(name, index) {
     }
 
     // ♚ BLACK KING + CASTLING
-    if (name === "king-b") {
+    if (name === "king-b" && !whiteTurn) {
         const kingMoves = [-9, -8, -7, -1, 1, 7, 8, 9];
         for (const moveOffset of kingMoves) {
             const move = index + moveOffset;
