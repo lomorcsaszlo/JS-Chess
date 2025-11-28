@@ -1,0 +1,59 @@
+// 1. Helper function to call chess-api.com
+async function postChessApi(data = {}) {
+    const response = await fetch("https://chess-api.com/v1", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+        
+    }
+
+    return response.json();
+}
+
+// 2. Main function to get best move from a FEN
+export async function getBestMove(fen) {
+    try {
+        const data = await postChessApi({ fen: fen });
+
+        // The API returns something like:
+        // { "move": "e2e4", "fen": "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1" }
+        const bestMove = data.move || null;
+
+        console.log("Best move:", bestMove);
+        return bestMove;
+    } catch (err) {
+        console.error("Error fetching best move:", err);
+        return null;
+    }
+}
+
+async function getBestMoveAlternative(fen) {
+  const url = `https://www.chessdb.cn/cdb.php?action=querybest&board=${encodeURIComponent(fen)}`;
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+  const text = await response.text();
+
+  // The API returns something like "move:e2e4"
+  const match = text.match(/move:([a-h][1-8][a-h][1-8][qbnr]?)/);
+  const bestMove = match ? match[1] : null;
+
+  console.log("Best move2:", bestMove); // ✅ Prints something like "e2e4"
+  return bestMove;
+}
+
+// Example usage:
+getBestMoveAlternative("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+
+
+
+
+
+
+// 3. Example usage:
+getBestMove("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");

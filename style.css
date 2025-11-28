@@ -286,9 +286,9 @@ body {
 
 
 header {
-    background-color:  var(--backgroundColor);
+    background-color:  #F5EFED;
     /* Dark background for the header */
-    color: #fff;
+    color: var(--backgroundColor);
     padding: 10px 10px 0 0;
     text-align: center;
     width: 100%;
@@ -307,13 +307,13 @@ nav ul li {
 
 nav ul li a {
     text-decoration: none;
-    color: #fff;
+    color: var(--backgroundColor);
     font-size: 18px;
     transition: color 0.3s ease;
 }
 
 nav ul li a:hover {
-    color: var(--darkSquare);
+    color: #474747;
     /* A golden color on hover */
 }
 
